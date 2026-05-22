@@ -1,16 +1,11 @@
-
-console.log('[Scryfall Premodern] Content script loaded');
-
 async function addPremodernLegality() {
     // First, we need to obtain the card ID from the page
     let cardID = obtainCardID();
     if (!cardID) {
-        console.log('Card ID not found, cannot fetch data');
         return false;
     }
     // Next, we fetch the card data from Scryfall's API
     let legality = await fetchCardLegality(cardID);
-    console.log('Fetched legality:', legality);
     if (!legality) return false;
 
     // Finally, we modify the DOM to add the new legality information
@@ -18,7 +13,6 @@ async function addPremodernLegality() {
     if (legalityList) {
         //TODO: Consider adding a new row if the last one is full
         let rows = document.querySelectorAll('.card-legality-row');
-        console.log(rows);
         if (rows.length === 0) return false;
         let lastRow = rows[rows.length - 1];
 
@@ -43,13 +37,11 @@ async function addPremodernLegality() {
 
 function obtainCardID() {
     let cardInfo = document.querySelector('meta[name="scryfall:card:id"]');
-    console.log('Card info element:', cardInfo);
     if (cardInfo) {
         return cardInfo.getAttribute('content');
     }
-    //Fallback: try to extract from another source
+    //Fallback: try to extract ID from another source
     cardInfo = document.querySelector('button.deckbuilder-card-add-button');
-    console.log('Fallback card info element:', cardInfo);
     if (cardInfo) {
         return cardInfo.getAttribute('data-card-id');
     }
@@ -61,7 +53,6 @@ async function fetchCardLegality(cardID) {
     return fetch(apiURL)
         .then(response => response.json())
         .then(data => {
-            console.log('Card data:', data);
             if (data.legalities && data.legalities.premodern) {
                 let legality = data.legalities.premodern;
                 if (legality === 'not_legal') {
@@ -72,7 +63,7 @@ async function fetchCardLegality(cardID) {
             return null;
         })
         .catch(error => {
-            console.error('Error fetching card data:', error);
+            console.error('[Premodern extension] Error fetching card data:', error);
             return null;
         });
 }

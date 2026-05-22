@@ -9,7 +9,6 @@
   "icons": {
     "48": "icons/border-48.svg"
   },
-  "default_locale": "en",
 
   "browser_specific_settings": {
     "gecko": {
@@ -22,7 +21,7 @@
 
   "content_scripts": [
     {
-      "matches": ["*://*.scryfall.com/card/*","*://*.scryfall.com/cards/*"],
+      "matches": ["*://*.scryfall.com/card/*"],
       "js": ["scryfall-premodern.js"]
     }
   ],
